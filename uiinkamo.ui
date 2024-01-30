@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UiInkamo</class>
+ <widget class="QMainWindow" name="UiInkamo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>792</width>
+    <height>477</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>620</width>
+    <height>358</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Inkamo</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="printersGroupBox">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
+      <property name="title">
+       <string>Printers</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QTreeView" name="printersTreeView"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="statusGroupBox">
+      <property name="styleSheet">
+       <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
+      <property name="title">
+       <string>Status Information</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QTextEdit" name="textEdit">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>792</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionRefresh_Printers"/>
+    <addaction name="actionSettings"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuKeys">
+    <property name="title">
+     <string>Keys</string>
+    </property>
+    <addaction name="actionBuy_Key"/>
+    <addaction name="actionCheck_Keys"/>
+    <addaction name="actionBuy_Firmware_Key"/>
+   </widget>
+   <widget class="QMenu" name="menuPrinters">
+    <property name="title">
+     <string>Printers</string>
+    </property>
+    <addaction name="actionSupported_Printers"/>
+    <addaction name="actionPrinter_Info"/>
+    <addaction name="actionRead_Counters"/>
+    <addaction name="actionReset_Counters"/>
+    <addaction name="actionHead_Clean"/>
+    <addaction name="actionRead_EEPROM"/>
+    <addaction name="actionRestore_EEPROM"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp"/>
+    <addaction name="actionSupport"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuKeys"/>
+   <addaction name="menuPrinters"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionBuy_Key">
+   <property name="text">
+    <string>Buy Key</string>
+   </property>
+  </action>
+  <action name="actionCheck_Keys">
+   <property name="text">
+    <string>Check Keys</string>
+   </property>
+  </action>
+  <action name="actionSupported_Printers">
+   <property name="text">
+    <string>Supported Printers</string>
+   </property>
+  </action>
+  <action name="actionRead_Counters">
+   <property name="text">
+    <string>Read Counters</string>
+   </property>
+  </action>
+  <action name="actionReset_Counters">
+   <property name="text">
+    <string>Reset Counters</string>
+   </property>
+  </action>
+  <action name="actionHead_Clean">
+   <property name="text">
+    <string>Head Clean</string>
+   </property>
+  </action>
+  <action name="actionRead_EEPROM">
+   <property name="text">
+    <string>Read EEPROM</string>
+   </property>
+  </action>
+  <action name="actionRestore_EEPROM">
+   <property name="text">
+    <string>Restore EEPROM</string>
+   </property>
+  </action>
+  <action name="actionPrinter_Info">
+   <property name="text">
+    <string>Printer Info</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionBuy_Firmware_Key">
+   <property name="text">
+    <string>Buy Firmware Key</string>
+   </property>
+  </action>
+  <action name="actionSupport">
+   <property name="text">
+    <string>Support</string>
+   </property>
+  </action>
+  <action name="actionRefresh_Printers">
+   <property name="text">
+    <string>Refresh Printers</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
