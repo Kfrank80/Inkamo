@@ -101,42 +101,38 @@ bool Printer::restaurar_eeprom(char* nueva_eeprom)
 
 
 // Lee el modelo de la impresora y establece propiedad Modelo
-bool Printer::leer_modelo()
+void Printer::leer_modelo()
 {
-    // TODO: Agregar aquí el código de implementación.
-    return false;
+    Modelo = printerName();
 }
 
 
 // Lee el estado y establece propiedad Estado
-bool Printer::leer_estado()
+void Printer::leer_estado()
 {
     // TODO: Agregar aquí el código de implementación.
-    return false;
+    Estado = printerState();
 }
 
 
 // Lee el serial y establece propiedad Serial.
-bool Printer::leer_serial()
+void Printer::leer_serial()
 {
-    // TODO: Agregar aquí el código de implementación.
-    return false;
+    // TODO: Agregar aquí el código de implementación.    
 }
 
 
 // Lee el MAC y establece propiedad MAC.
-bool Printer::leer_mac()
+void Printer::leer_mac()
 {
     // TODO: Agregar aquí el código de implementación.
-    return false;
 }
 
 
 // Lee el modo en que se encuentra la impresora y establece propiedad Modo.
-bool Printer::leer_modo()
+void Printer::leer_modo()
 {
     // TODO: Agregar aquí el código de implementación.
-    return false;
 }
 
 
@@ -152,5 +148,5 @@ bool Printer::leer_niveles_tinta()
 bool Printer::verificar_si_esta_soportada()
 {
     // TODO: Agregar aquí el código de implementación.
-    return false;
+    return true;
 }

@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <QPrinter>
 #include <QtPrintSupport/QPrinterInfo>
+#include <QString>
 #include <winspool.h>
 
 
@@ -36,11 +37,11 @@ public:
     ~Printer();
 
 	HANDLE hPrinter;
-	std::string Modelo;
-	std::string Estado;
-	std::string Serial;
-	std::string MAC;
-    std::string ultimos_errores;
+    QString Modelo;
+    QPrinter::PrinterState Estado;
+    QString Serial;
+    QString MAC;
+    QString ultimos_errores;
 	TIPOS_MODO Modo;
 	NIVELES_TINTA NivelesTinta;
 	int Contadores;
@@ -67,19 +68,19 @@ public:
 	bool restaurar_eeprom(char* nueva_eeprom);
 
 	// Lee el modelo de la impresora y establece propiedad Modelo
-	bool leer_modelo();
+    void leer_modelo();
 
 	// Lee el estado y establece propiedad Estado
-	bool leer_estado();
+    void leer_estado();
 
 	// Lee el serial y establece propiedad Serial.
-	bool leer_serial();
+    void leer_serial();
 
 	// Lee el MAC y establece propiedad MAC.
-	bool leer_mac();
+    void leer_mac();
 
 	// Lee el modo en que se encuentra la impresora y establece propiedad Modo.
-	bool leer_modo();
+    void leer_modo();
 
 	// Lee los niveles de tinta de la impresora y establece propiedad Nivel de Tinta.
 	bool leer_niveles_tinta();
