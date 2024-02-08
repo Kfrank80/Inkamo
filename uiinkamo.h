@@ -4,8 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QtPrintSupport/QPrinterInfo>
-#include <Windows.h>
-#include <winspool.h>
+#include <QStandardItemModel>
 
 #include "Printer.h"
 
@@ -66,6 +65,7 @@ private slots:
 private:
     Ui::UiInkamo *ui;
     QList<Printer> Impresoras;
+    QStandardItemModel printerModel;
 
 public:
     // Comprueba si hay actualizaciones.
@@ -75,7 +75,7 @@ public:
     bool detectar_impresoras();
 
     // Valida el serial dado en el servidor para la operación requerida.
-    bool validar_serial(std::string serial, std::string usuario, std::string modelo_impresora, std::string hardwareID);
+    bool validar_serial(QString serial, QString usuario, QString modelo_impresora, QString hardwareID);
 
 };
 

@@ -9,6 +9,8 @@ UiInkamo::UiInkamo(QWidget *parent)
     , ui(new Ui::UiInkamo)
 {
     ui->setupUi(this);
+    detectar_impresoras();
+    ui->printersTreeView->setModel(&printerModel);
 }
 
 UiInkamo::~UiInkamo()
@@ -87,11 +89,36 @@ bool UiInkamo::detectar_impresoras()
         // TODO: Código para inicializar cada impresora encontrada
         foreach (QPrinterInfo actualPrinter, impresorasDisponibles)
         {
-            HANDLE printerHandle;
-            OpenPrinter((LPWSTR)actualPrinter.printerName().data(), &printerHandle, NULL);
-            Printer tempPrinter(printerHandle, actualPrinter);
+            Printer tempPrinter(actualPrinter);
             Impresoras.append(tempPrinter);
         }
+        printerModel.clear();
+        QStandardItem *parentItem = printerModel.invisibleRootItem();
+        for (int it=0; it<Impresoras.size(); it++)
+        {
+            QStandardItem *item = new QStandardItem(Impresoras[it].printerName());
+            parentItem->appendRow(item);
+            parentItem = item;
+            item = new QStandardItem(Impresoras[it].Modelo);
+            parentItem->appendRow(item);
+            item = new QStandardItem(qprinterState.at(Impresoras[it].Estado));
+            parentItem->appendRow(item);
+            item = new QStandardItem(Impresoras[it].Serial);
+            parentItem->appendRow(item);
+            item = new QStandardItem(Impresoras[it].MAC);
+            parentItem->appendRow(item);
+            item = new QStandardItem(qprinterMode.at(Impresoras[it].Modo));
+            parentItem->appendRow(item);
+            item = new QStandardItem(QString("Black: " + QString(Impresoras[it].NivelesTinta.Black) +
+                                             " Magenta: " + QString(Impresoras[it].NivelesTinta.Magenta) +
+                                             " Yellow: " + QString(Impresoras[it].NivelesTinta.Yellow) +
+                                             " Cian: " + QString(Impresoras[it].NivelesTinta.Cian)));
+            parentItem->appendRow(item);
+            item = new QStandardItem(QString(Impresoras[it].Contadores));
+            parentItem->appendRow(item);
+        }
+        printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
+
         return true;
     }
 
@@ -100,8 +127,8 @@ bool UiInkamo::detectar_impresoras()
 
 
 // Valida el serial dado en el servidor para la operación requerida.
-bool UiInkamo::validar_serial(std::string serial, std::string usuario,
-                            std::string modelo_impresora, std::string hardwareID)
+bool UiInkamo::validar_serial(QString serial, QString usuario,
+                              QString modelo_impresora, QString hardwareID)
 {
     // TODO: Agregar aquí el código de implementación.
     return false;

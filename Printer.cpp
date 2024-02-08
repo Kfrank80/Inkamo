@@ -9,17 +9,18 @@ Printer::Printer(const Printer& printer)
 
 
 // Constructor. Inicializa el objeto Printer usando su handler: hPrinter
-Printer::Printer(HANDLE hImpresora, QPrinterInfo printerInfo)
-    : QPrinter(printerInfo, QPrinter::ScreenResolution)
+Printer::Printer(QPrinterInfo printerInfo)
+    : QPrinter(printerInfo, QPrinter::ScreenResolution),
+      Modelo(printerInfo.makeAndModel()),
+      Estado(printerInfo.state())
 {
-    hPrinter = hImpresora;
     esta_soportada = verificar_si_esta_soportada();
     if(esta_soportada)
     {
-        leer_modelo();
+        // leer_modelo();
         leer_serial();
         leer_mac();
-        leer_estado();
+        // leer_estado();
         leer_modo();
         leer_ultimos_errores();
         leer_niveles_tinta();
@@ -33,7 +34,6 @@ Printer::~Printer()
 
 const Printer& Printer::operator=(const Printer &other)
 {
-    this->hPrinter = other.hPrinter;
     this->Estado = other.Estado;
     this->Modelo = other.Modelo;
     this->Serial = other.Serial;
@@ -103,7 +103,7 @@ bool Printer::restaurar_eeprom(char* nueva_eeprom)
 // Lee el modelo de la impresora y establece propiedad Modelo
 void Printer::leer_modelo()
 {
-    Modelo = printerName();
+
 }
 
 
@@ -118,7 +118,8 @@ void Printer::leer_estado()
 // Lee el serial y establece propiedad Serial.
 void Printer::leer_serial()
 {
-    // TODO: Agregar aquí el código de implementación.    
+    // TODO: Agregar aquí el código de implementación.
+    Serial = "";
 }
 
 
@@ -126,6 +127,7 @@ void Printer::leer_serial()
 void Printer::leer_mac()
 {
     // TODO: Agregar aquí el código de implementación.
+    MAC = "";
 }
 
 

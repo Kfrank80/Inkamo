@@ -1,11 +1,10 @@
 #pragma once
 
 #include <string>
-#include <Windows.h>
 #include <QPrinter>
 #include <QtPrintSupport/QPrinterInfo>
 #include <QString>
-#include <winspool.h>
+
 
 
 // typedefs
@@ -18,13 +17,22 @@ typedef enum TIPOS_MODO {
 typedef struct NIVELES_TINTA {
 	int Black;
 	int Magenta;
-	int Amarillo;
+    int Yellow;
 	int Cian;
 }*PNIVELES_TINTA;
 
 // Defines
 #define CONTADORES_MAX 3
 #define CONTADORES_MIN 1
+
+const QStringList qprinterState = {"Idle",
+                                   "Active",
+                                   "Aborted",
+                                   "Error"};
+
+const QStringList qprinterMode = {"NO_ESPECIFICADO",
+                                  "NORMAL",
+                                  "SERVICIO"};
 
 
 class Printer : public QPrinter
@@ -33,10 +41,9 @@ class Printer : public QPrinter
 
 public:
     Printer(const Printer& printer);
-    Printer(HANDLE hImpresora, QPrinterInfo printerInfo);
+    Printer(QPrinterInfo printerInfo);
     ~Printer();
 
-	HANDLE hPrinter;
     QString Modelo;
     QPrinter::PrinterState Estado;
     QString Serial;
