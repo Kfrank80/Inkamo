@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QtPrintSupport/QPrinterInfo>
 #include <QStandardItemModel>
+#include <QItemSelectionModel>
 
 #include "Printer.h"
 
@@ -66,6 +67,7 @@ private:
     Ui::UiInkamo *ui;
     QList<Printer> Impresoras;
     QStandardItemModel printerModel;
+    QItemSelectionModel *selections;
 
 public:
     // Comprueba si hay actualizaciones.
@@ -76,6 +78,12 @@ public:
 
     // Valida el serial dado en el servidor para la operación requerida.
     bool validar_serial(QString serial, QString usuario, QString modelo_impresora, QString hardwareID);
+
+    // Refrescar printersTreeView
+    void refrescar_vista_arbol();
+
+    // Refrescar textEdit
+    void refrescar_vista_info();
 
 };
 

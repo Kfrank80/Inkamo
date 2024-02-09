@@ -11,7 +11,14 @@ UiInkamo::UiInkamo(QWidget *parent)
     ui->setupUi(this);
     detectar_impresoras();
     printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
+    selections = new QItemSelectionModel(&printerModel);
     ui->printersTreeView->setModel(&printerModel);
+    ui->printersTreeView->setSelectionModel(selections);
+    ui->printersTreeView->setUniformRowHeights(true);
+    ui->printersTreeView->header()->setStretchLastSection(true);
+    ui->printersTreeView->viewport()->setAttribute(Qt::WA_StaticContents);
+    // Disable the focus rect to get minimal repaints when scrolling on Mac.
+    ui->printersTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 UiInkamo::~UiInkamo()
@@ -95,32 +102,8 @@ bool UiInkamo::detectar_impresoras()
             Printer tempPrinter(actualPrinter);
             Impresoras.append(tempPrinter);
         }
-        printerModel.clear();
-        QStandardItem *parentItem = printerModel.invisibleRootItem();
-        for (int it=0; it<Impresoras.size(); it++)
-        {
-            QStandardItem *item = new QStandardItem(Impresoras[it].printerName());
-            parentItem->appendRow(item);
-            parentItem = item;
-            item = new QStandardItem("Model: " + Impresoras[it].Modelo);
-            parentItem->appendRow(item);
-            item = new QStandardItem("Status: " + qprinterState.at(Impresoras[it].Estado));
-            parentItem->appendRow(item);
-            item = new QStandardItem("Serial: " + Impresoras[it].Serial);
-            parentItem->appendRow(item);
-            item = new QStandardItem("MAC: " + Impresoras[it].MAC);
-            parentItem->appendRow(item);
-            item = new QStandardItem("Mode: " + qprinterMode.at(Impresoras[it].Modo));
-            parentItem->appendRow(item);
-            item = new QStandardItem(QString("Black: " + QString(Impresoras[it].NivelesTinta.Black) +
-                                             " Magenta: " + QString(Impresoras[it].NivelesTinta.Magenta) +
-                                             " Yellow: " + QString(Impresoras[it].NivelesTinta.Yellow) +
-                                             " Cian: " + QString(Impresoras[it].NivelesTinta.Cian)));
-            parentItem->appendRow(item);
-            item = new QStandardItem("Counters: " + QString(Impresoras[it].Contadores));
-            parentItem->appendRow(item);
-            parentItem = printerModel.invisibleRootItem();
-        }
+        refrescar_vista_arbol();
+        refrescar_vista_info();
 
         return true;
     }
@@ -227,5 +210,47 @@ void UiInkamo::on_actionSupport_triggered()
 void UiInkamo::on_actionAbout_triggered()
 {
 
+}
+
+void UiInkamo::refrescar_vista_arbol()
+{
+    printerModel.clear();
+    QStandardItem *parentItem = printerModel.invisibleRootItem();
+    for (int it=0; it<Impresoras.size(); it++)
+    {
+        QStandardItem *item = new QStandardItem(Impresoras[it].printerName());
+        parentItem->appendRow(item);
+        parentItem = item;
+        item = new QStandardItem("Model: " + Impresoras[it].Modelo);
+        parentItem->appendRow(item);
+        item = new QStandardItem("Status: " + qprinterState.at(Impresoras[it].Estado));
+        parentItem->appendRow(item);
+        item = new QStandardItem("Serial: " + Impresoras[it].Serial);
+        parentItem->appendRow(item);
+        item = new QStandardItem("MAC: " + Impresoras[it].MAC);
+        parentItem->appendRow(item);
+        item = new QStandardItem("Mode: " + qprinterMode.at(Impresoras[it].Modo));
+        parentItem->appendRow(item);
+        item = new QStandardItem(QString("Black: " + QString(Impresoras[it].NivelesTinta.Black) +
+                                         " Magenta: " + QString(Impresoras[it].NivelesTinta.Magenta) +
+                                         " Yellow: " + QString(Impresoras[it].NivelesTinta.Yellow) +
+                                         " Cian: " + QString(Impresoras[it].NivelesTinta.Cian)));
+        parentItem->appendRow(item);
+        item = new QStandardItem("Counters: " + QString(Impresoras[it].Contadores));
+        parentItem->appendRow(item);
+        parentItem = printerModel.invisibleRootItem();
+    }
+}
+
+void UiInkamo::refrescar_vista_info()
+{
+    // FIXME: Resfrescar la vista de la informacion abajo
+    /*
+    if(!selections->parent()->objectName().isEmpty() &&
+       selections->Rows)
+    {
+
+    }
+    */
 }
 
