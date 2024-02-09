@@ -10,6 +10,7 @@ UiInkamo::UiInkamo(QWidget *parent)
 {
     ui->setupUi(this);
     detectar_impresoras();
+    printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
     ui->printersTreeView->setModel(&printerModel);
 }
 
@@ -99,25 +100,25 @@ bool UiInkamo::detectar_impresoras()
             QStandardItem *item = new QStandardItem(Impresoras[it].printerName());
             parentItem->appendRow(item);
             parentItem = item;
-            item = new QStandardItem(Impresoras[it].Modelo);
+            item = new QStandardItem("Model: " + Impresoras[it].Modelo);
             parentItem->appendRow(item);
-            item = new QStandardItem(qprinterState.at(Impresoras[it].Estado));
+            item = new QStandardItem("Status: " + qprinterState.at(Impresoras[it].Estado));
             parentItem->appendRow(item);
-            item = new QStandardItem(Impresoras[it].Serial);
+            item = new QStandardItem("Serial: " + Impresoras[it].Serial);
             parentItem->appendRow(item);
-            item = new QStandardItem(Impresoras[it].MAC);
+            item = new QStandardItem("MAC: " + Impresoras[it].MAC);
             parentItem->appendRow(item);
-            item = new QStandardItem(qprinterMode.at(Impresoras[it].Modo));
+            item = new QStandardItem("Mode: " + qprinterMode.at(Impresoras[it].Modo));
             parentItem->appendRow(item);
             item = new QStandardItem(QString("Black: " + QString(Impresoras[it].NivelesTinta.Black) +
                                              " Magenta: " + QString(Impresoras[it].NivelesTinta.Magenta) +
                                              " Yellow: " + QString(Impresoras[it].NivelesTinta.Yellow) +
                                              " Cian: " + QString(Impresoras[it].NivelesTinta.Cian)));
             parentItem->appendRow(item);
-            item = new QStandardItem(QString(Impresoras[it].Contadores));
+            item = new QStandardItem("Counters: " + QString(Impresoras[it].Contadores));
             parentItem->appendRow(item);
+            parentItem = printerModel.invisibleRootItem();
         }
-        printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
 
         return true;
     }

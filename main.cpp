@@ -30,8 +30,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    Ink.detectar_impresoras();
-
     Ink.show();
     return app.exec();
 }

@@ -24,6 +24,7 @@ Printer::Printer(QPrinterInfo printerInfo)
         leer_modo();
         leer_ultimos_errores();
         leer_niveles_tinta();
+        leer_contadores();
     }
 }
 
@@ -50,6 +51,7 @@ const Printer& Printer::operator=(const Printer &other)
 bool Printer::leer_contadores()
 {
     // TODO: Agregar aquí el código de implementación.
+    Contadores = 0;
     return false;
 }
 
@@ -73,6 +75,7 @@ bool Printer::resetear_contadores()
 bool Printer::leer_ultimos_errores()
 {
     // TODO: Agregar aquí el código de implementación.
+    ultimos_errores = "";
     return false;
 }
 
@@ -135,6 +138,7 @@ void Printer::leer_mac()
 void Printer::leer_modo()
 {
     // TODO: Agregar aquí el código de implementación.
+    Modo = NO_ESPECIFICADO;
 }
 
 
@@ -142,6 +146,10 @@ void Printer::leer_modo()
 bool Printer::leer_niveles_tinta()
 {
     // TODO: Agregar aquí el código de implementación.
+    NivelesTinta.Black = 0;
+    NivelesTinta.Cian = 0;
+    NivelesTinta.Magenta = 0;
+    NivelesTinta.Yellow = 0;
     return false;
 }
 
