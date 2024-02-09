@@ -53,10 +53,12 @@ void UiInkamo::on_actionRefresh_Printers_triggered()
 // Entonces, retorna true. Si no hay actualizaciones retorna false.
 bool UiInkamo::actualizar()
 {
+    bool hayNuevaVersion;
+
     // TODO: Agregar aquí el código para comprobar que hay una
     // nueva version disponible del programa en el servidor.
     // Y actualizar variable hayNuevaVersion
-    bool hayNuevaVersion = true;
+    hayNuevaVersion = false;
 
     // Si hay una nueva version disponible, informar al usuario
     // y permitirle elegir si desea actualizar el software.
