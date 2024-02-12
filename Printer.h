@@ -5,6 +5,7 @@
 #include <QtPrintSupport/QPrinterInfo>
 #include <QString>
 
+#include "./escputil/escputil.h"
 
 
 // typedefs

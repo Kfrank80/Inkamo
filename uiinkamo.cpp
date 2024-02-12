@@ -96,18 +96,21 @@ bool UiInkamo::detectar_impresoras()
     QList<QPrinterInfo> impresorasDisponibles = QPrinterInfo::availablePrinters();
     if(!impresorasDisponibles.isEmpty())
     {
+        QString textoInfo = QString("Printers Detected on the system:\n");
         // TODO: Código para inicializar cada impresora encontrada
         foreach (QPrinterInfo actualPrinter, impresorasDisponibles)
         {
+            textoInfo.append(actualPrinter.description() + QString("\n"));
             Printer tempPrinter(actualPrinter);
             Impresoras.append(tempPrinter);
         }
         refrescar_vista_arbol();
-        refrescar_vista_info();
+        refrescar_vista_info(textoInfo);
 
         return true;
     }
-
+    refrescar_vista_info(QString("No printers detected in the system.\n"
+                                 "Please connect and refresh printers."));
     return false;
 }
 
@@ -242,15 +245,8 @@ void UiInkamo::refrescar_vista_arbol()
     }
 }
 
-void UiInkamo::refrescar_vista_info()
+void UiInkamo::refrescar_vista_info(QString text)
 {
-    // FIXME: Resfrescar la vista de la informacion abajo
-    /*
-    if(!selections->parent()->objectName().isEmpty() &&
-       selections->Rows)
-    {
-
-    }
-    */
+    ui->textEdit->setText(text);
 }
 

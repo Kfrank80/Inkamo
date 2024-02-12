@@ -12,11 +12,15 @@ CONFIG += c++11
 
 SOURCES += \
     Printer.cpp \
+    escputil/d4lib.c \
+    escputil/escputil.cpp \
     main.cpp \
     uiinkamo.cpp
 
 HEADERS += \
     Printer.h \
+    escputil/d4lib.h \
+    escputil/escputil.h \
     uiinkamo.h
 
 FORMS += \

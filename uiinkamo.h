@@ -83,7 +83,7 @@ public:
     void refrescar_vista_arbol();
 
     // Refrescar textEdit
-    void refrescar_vista_info();
+    void refrescar_vista_info(QString text);
 
 };
 

@@ -8,7 +8,7 @@ Printer::Printer(const Printer& printer)
 }
 
 
-// Constructor. Inicializa el objeto Printer usando su handler: hPrinter
+// Constructor. Inicializa el objeto Printer a partir de un objeto QPrinterInfo
 Printer::Printer(QPrinterInfo printerInfo)
     : QPrinter(printerInfo, QPrinter::ScreenResolution),
       Modelo(printerInfo.makeAndModel()),
@@ -51,7 +51,7 @@ const Printer& Printer::operator=(const Printer &other)
 bool Printer::leer_contadores()
 {
     // TODO: Agregar aquí el código de implementación.
-    Contadores = 0;
+    do_ink_level();
     return false;
 }
 
