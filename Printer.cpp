@@ -2,25 +2,17 @@
 
 
 // default constructor
-Printer::Printer(const Printer& printer)
+Printer::Printer(const PRINTER_INFO_2 _printerInfo)
 {
-    this->operator=(printer);
-}
+    printerInfo = _printerInfo;
 
-
-// Constructor. Inicializa el objeto Printer a partir de un objeto QPrinterInfo
-Printer::Printer(QPrinterInfo printerInfo)
-    : QPrinter(printerInfo, QPrinter::ScreenResolution),
-      Modelo(printerInfo.makeAndModel()),
-      Estado(printerInfo.state())
-{
     esta_soportada = verificar_si_esta_soportada();
     if(esta_soportada)
     {
-        // leer_modelo();
+        leer_modelo();
         leer_serial();
         leer_mac();
-        // leer_estado();
+        leer_estado();
         leer_modo();
         leer_ultimos_errores();
         leer_niveles_tinta();
@@ -33,25 +25,10 @@ Printer::~Printer()
 
 }
 
-const Printer& Printer::operator=(const Printer &other)
-{
-    this->Estado = other.Estado;
-    this->Modelo = other.Modelo;
-    this->Serial = other.Serial;
-    this->MAC = other.MAC;
-    this->ultimos_errores = other.ultimos_errores;
-    this->Modo = other.Modo;
-    this->NivelesTinta = other.NivelesTinta;
-    this->Contadores = other.Contadores;
-    this->esta_soportada = other.esta_soportada;
-    return *this;
-}
-
 // Lee los contadores de la impresora y actualiza la variable Contadores.
 bool Printer::leer_contadores()
 {
-    // TODO: Agregar aquí el código de implementación.
-    do_ink_level();
+    // TODO: Agregar aquí el código de implementación.    
     return false;
 }
 
@@ -114,7 +91,6 @@ void Printer::leer_modelo()
 void Printer::leer_estado()
 {
     // TODO: Agregar aquí el código de implementación.
-    Estado = printerState();
 }
 
 

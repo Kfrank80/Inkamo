@@ -6,6 +6,7 @@
 #include <QtPrintSupport/QPrinterInfo>
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
+#include <windows.h>
 
 #include "Printer.h"
 

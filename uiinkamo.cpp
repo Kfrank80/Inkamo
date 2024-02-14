@@ -93,24 +93,46 @@ bool UiInkamo::actualizar()
 bool UiInkamo::detectar_impresoras()
 {
     // TODO: Agregar aquí el código de implementación.
-    QList<QPrinterInfo> impresorasDisponibles = QPrinterInfo::availablePrinters();
-    if(!impresorasDisponibles.isEmpty())
-    {
-        QString textoInfo = QString("Printers Detected on the system:\n");
-        // TODO: Código para inicializar cada impresora encontrada
-        foreach (QPrinterInfo actualPrinter, impresorasDisponibles)
-        {
-            textoInfo.append(actualPrinter.description() + QString("\n"));
-            Printer tempPrinter(actualPrinter);
-            Impresoras.append(tempPrinter);
-        }
-        refrescar_vista_arbol();
-        refrescar_vista_info(textoInfo);
+    DWORD tamano = 0, numero = 0;
+    PRINTER_INFO_2 *info = NULL;
 
-        return true;
+    EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+        NULL,
+        2,
+        NULL,
+        0,
+        &tamano,
+        &numero);
+
+    info = (PRINTER_INFO_2*)malloc(tamano);
+    EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
+        NULL,
+        2,
+        (BYTE*)info,
+        tamano,
+        &tamano,
+        &numero);
+
+    if(numero)
+    {
+        LPWSTR tempStr = (LPWSTR)malloc(4*2);
+        PRINTER_INFO_2 *pinfo = info;
+
+        for (DWORD i=0;i<numero;i++)
+        {
+            lstrcpynW((LPWSTR)tempStr, (LPCWSTR)pinfo->pPortName, 4);
+            if(lstrcmpW(tempStr, (LPCWSTR)L"USB") == 0)
+            {
+                Printer *tempPrinter = new Printer(*pinfo);
+                Impresoras.append(*tempPrinter);
+            }
+            pinfo++;
+        }
+        free(tempStr);
+        free(info);
+        return (bool)Impresoras.size();
     }
-    refrescar_vista_info(QString("No printers detected in the system.\n"
-                                 "Please connect and refresh printers."));
+
     return false;
 }
 
@@ -221,12 +243,12 @@ void UiInkamo::refrescar_vista_arbol()
     QStandardItem *parentItem = printerModel.invisibleRootItem();
     for (int it=0; it<Impresoras.size(); it++)
     {
-        QStandardItem *item = new QStandardItem(Impresoras[it].printerName());
+        QStandardItem *item = new QStandardItem(*Impresoras[it].printerInfo.pPrinterName);
         parentItem->appendRow(item);
         parentItem = item;
         item = new QStandardItem("Model: " + Impresoras[it].Modelo);
         parentItem->appendRow(item);
-        item = new QStandardItem("Status: " + qprinterState.at(Impresoras[it].Estado));
+        item = new QStandardItem("Status: " + Impresoras[it].Estado);
         parentItem->appendRow(item);
         item = new QStandardItem("Serial: " + Impresoras[it].Serial);
         parentItem->appendRow(item);
