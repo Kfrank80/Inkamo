@@ -121,7 +121,7 @@ bool UiInkamo::detectar_impresoras()
         for (DWORD i=0;i<numero;i++)
         {
             lstrcpynW((LPWSTR)tempStr, (LPCWSTR)pinfo->pPortName, 4);
-            if(lstrcmpW(tempStr, (LPCWSTR)L"USB") == 0)
+            if(lstrcmpW(tempStr, (LPCWSTR)L"USB") != 0)
             {
                 Printer *tempPrinter = new Printer(*pinfo);
                 Impresoras.append(*tempPrinter);
@@ -132,6 +132,7 @@ bool UiInkamo::detectar_impresoras()
         free(info);
         return (bool)Impresoras.size();
     }
+    free(info);
 
     return false;
 }
@@ -234,7 +235,12 @@ void UiInkamo::on_actionSupport_triggered()
 
 void UiInkamo::on_actionAbout_triggered()
 {
-
+    QDialog *about = new QDialog(this);
+    Ui_aboutDialog *aboutUi = new Ui_aboutDialog();
+    aboutUi->setupUi(about);
+    about->exec();
+    delete aboutUi;
+    delete about;
 }
 
 void UiInkamo::refrescar_vista_arbol()

@@ -22,6 +22,7 @@ HEADERS += \
     uiinkamo.h
 
 FORMS += \
+    about.ui \
     uiinkamo.ui
 
 TRANSLATIONS += \

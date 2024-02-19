@@ -6,9 +6,12 @@
 #include <QtPrintSupport/QPrinterInfo>
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
+#include <QFile>
+#include <QTextStream>
 #include <windows.h>
 
 #include "Printer.h"
+#include "ui_about.h"
 
 
 QT_BEGIN_NAMESPACE
