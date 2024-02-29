@@ -128,11 +128,11 @@ bool UiInkamo::detectar_impresoras()
         for (DWORD i=0;i<numero;i++)
         {
             lstrcpynW((LPWSTR)tempStr, (LPCWSTR)pinfo->pPortName, 4);
-            if(lstrcmpW(tempStr, (LPCWSTR)L"USB") == 0)
-            {
+            //if(lstrcmpW(tempStr, (LPCWSTR)L"USB") != 0)
+            //{
                 Printer *tempPrinter = new Printer(*pinfo);
                 Impresoras.append(*tempPrinter);
-            }
+            //}
             pinfo++;
         }
         free(tempStr);

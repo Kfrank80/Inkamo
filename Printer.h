@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QStringList>
+#include <QProcess>
 #include <windows.h>
 
 #include "./escputil/escputil.h"
@@ -42,6 +43,7 @@ public:
     ~Printer();
 
     PRINTER_INFO_2 printerInfo;
+    HANDLE HPrinter;
     QString Modelo;
     QString Estado;
     QString Serial;
@@ -51,6 +53,12 @@ public:
     NIVELES_TINTA NivelesTinta;
     int Contadores;
     bool esta_soportada;
+
+    // Enviar comando a la impresora y responder
+    std::string enviar_comando(std::string comando);
+
+    // Inicializar impresora
+    bool inicializar_impresora();
 
     // Lee los contadores de la impresora y actualiza la variable Contadores.
     bool leer_contadores();

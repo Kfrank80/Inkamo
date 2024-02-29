@@ -7,7 +7,7 @@ Printer::Printer(const PRINTER_INFO_2 _printerInfo)
     printerInfo = _printerInfo;
 
     esta_soportada = verificar_si_esta_soportada();
-    if(esta_soportada)
+    if(esta_soportada && OpenPrinterW(printerInfo.pPrinterName, &HPrinter, NULL))
     {
         leer_modelo();
         leer_serial();
@@ -23,6 +23,28 @@ Printer::Printer(const PRINTER_INFO_2 _printerInfo)
 Printer::~Printer()
 {
 
+}
+
+std::string Printer::enviar_comando(std::string comando)
+{
+
+}
+
+bool Printer::inicializar_impresora()
+{
+    QProcess prntcom;
+    prntcom.start("prntcom.exe", QStringList() << "-c");
+    if (!prntcom.waitForStarted())
+        return false;
+
+    prntcom.write("Qt rocks!");
+    prntcom.closeWriteChannel();
+
+    if (!prntcom.waitForFinished())
+        return false;
+
+    QByteArray result = prntcom.readAll();
+    return true;
 }
 
 // Lee los contadores de la impresora y actualiza la variable Contadores.
@@ -83,7 +105,7 @@ bool Printer::restaurar_eeprom(char* nueva_eeprom)
 // Lee el modelo de la impresora y establece propiedad Modelo
 void Printer::leer_modelo()
 {
-
+    inicializar_impresora();
 }
 
 
