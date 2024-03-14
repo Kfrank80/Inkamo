@@ -19,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     Printer.h \
+    libusb/libusb.h \
     libusbinterface.h \
     uiinkamo.h
 
@@ -45,3 +46,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libusb/ -llibusb-1.0
 
 INCLUDEPATH += $$PWD/libusb
 DEPENDPATH += $$PWD/libusb
+
+DISTFILES += \
+    libusb/libusb-1.0.a \
+    libusb/libusb-1.0.dll.a
