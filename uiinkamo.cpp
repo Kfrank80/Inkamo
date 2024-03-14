@@ -9,7 +9,16 @@ UiInkamo::UiInkamo(QWidget *parent)
     , ui(new Ui::UiInkamo)
 {
     ui->setupUi(this);
-    detectar_impresoras();
+    LibUSBInterface = new libusbInterface();
+    if(LibUSBInterface->init())
+        detectar_impresoras();
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("There is a problem with the \""
+                       "initialization of libusb.");
+        msgBox.exec();
+    }
     printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
     selections = new QItemSelectionModel(&printerModel);
     ui->printersTreeView->setModel(&printerModel);
@@ -24,6 +33,8 @@ UiInkamo::UiInkamo(QWidget *parent)
 UiInkamo::~UiInkamo()
 {
     delete ui;
+    delete selections;
+    delete LibUSBInterface;
 }
 
 void UiInkamo::on_printersTreeView_collapsed(const QModelIndex &index)
@@ -99,47 +110,21 @@ bool UiInkamo::actualizar()
 // Y luego agrega cada impresora al vector Impresoras.
 bool UiInkamo::detectar_impresoras()
 {
-    // TODO: Agregar aquí el código de implementación.
-    DWORD tamano = 0, numero = 0;
-    PRINTER_INFO_2 *info = NULL;
-
-    EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-        NULL,
-        2,
-        NULL,
-        0,
-        &tamano,
-        &numero);
-
-    info = (PRINTER_INFO_2*)malloc(tamano);
-    EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-        NULL,
-        2,
-        (BYTE*)info,
-        tamano,
-        &tamano,
-        &numero);
-
-    if(numero)
+    if(LibUSBInterface->listDevs())
     {
-        LPWSTR tempStr = (LPWSTR)malloc(4*2);
-        PRINTER_INFO_2 *pinfo = info;
+        libusb_device *dev;
+        int i = 0;
 
-        for (DWORD i=0;i<numero;i++)
+        while((dev = LibUSBInterface->devs[i++]) != NULL)
         {
-            lstrcpynW((LPWSTR)tempStr, (LPCWSTR)pinfo->pPortName, 4);
-            //if(lstrcmpW(tempStr, (LPCWSTR)L"USB") != 0)
-            //{
-                Printer *tempPrinter = new Printer(*pinfo);
-                Impresoras.append(*tempPrinter);
-            //}
-            pinfo++;
+            struct libusb_device_descriptor desc;
+            int r = libusb_get_device_descriptor(dev, &desc);
+            if (r < 0)
+                continue;
+
+
         }
-        free(tempStr);
-        free(info);
-        return (bool)Impresoras.size();
     }
-    free(info);
 
     return false;
 }
@@ -256,7 +241,7 @@ void UiInkamo::refrescar_vista_arbol()
     QStandardItem *parentItem = printerModel.invisibleRootItem();
     for (int it=0; it<Impresoras.size(); it++)
     {
-        QStandardItem *item = new QStandardItem(*Impresoras[it].printerInfo.pPrinterName);
+        QStandardItem *item = new QStandardItem(Impresoras[it].Modelo);
         parentItem->appendRow(item);
         parentItem = item;
         item = new QStandardItem("Model: " + Impresoras[it].Modelo);

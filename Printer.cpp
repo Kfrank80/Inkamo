@@ -1,22 +1,20 @@
 #include "Printer.h"
 
 
-// default constructor
-Printer::Printer(const PRINTER_INFO_2 _printerInfo)
-{
-    printerInfo = _printerInfo;
 
+
+
+// default constructor
+Printer::Printer()
+{
     esta_soportada = verificar_si_esta_soportada();
-    if(esta_soportada && OpenPrinterW(printerInfo.pPrinterName, &HPrinter, NULL))
+    if(esta_soportada)
     {
         leer_modelo();
-        leer_serial();
-        leer_mac();
-        leer_estado();
         leer_modo();
-        leer_ultimos_errores();
-        leer_niveles_tinta();
-        leer_contadores();
+        leer_estado();
+        leer_mac();
+        leer_serial();
     }
 }
 
@@ -25,26 +23,14 @@ Printer::~Printer()
 
 }
 
-std::string Printer::enviar_comando(std::string comando)
+QString Printer::enviar_comando(QString comando)
 {
-
+    return "True";
 }
 
 bool Printer::inicializar_impresora()
-{
-    QProcess prntcom;
-    prntcom.start("prntcom.exe", QStringList() << "-c");
-    if (!prntcom.waitForStarted())
-        return false;
-
-    prntcom.write("Qt rocks!");
-    prntcom.closeWriteChannel();
-
-    if (!prntcom.waitForFinished())
-        return false;
-
-    QByteArray result = prntcom.readAll();
-    return true;
+{    
+    enviar_comando("ESC @");
 }
 
 // Lee los contadores de la impresora y actualiza la variable Contadores.

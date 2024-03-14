@@ -6,19 +6,20 @@ CONFIG += c++11
 
 LIBS += -lwinspool
 
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     Printer.cpp \
-    escputil/escputil.cpp \
+    libusbinterface.cpp \
     main.cpp \
     uiinkamo.cpp
 
 HEADERS += \
     Printer.h \
-    escputil/escputil.h \
+    libusbinterface.h \
     uiinkamo.h
 
 FORMS += \
@@ -37,3 +38,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libusb/ -llibusb-1.0.dll
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libusb/ -llibusb-1.0
+
+INCLUDEPATH += $$PWD/libusb
+DEPENDPATH += $$PWD/libusb

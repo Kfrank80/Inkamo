@@ -8,7 +8,7 @@
 #include <QItemSelectionModel>
 #include <QFile>
 #include <QTextStream>
-#include <windows.h>
+
 
 #include "Printer.h"
 #include "ui_about.h"
@@ -69,6 +69,7 @@ private slots:
 
 private:
     Ui::UiInkamo *ui;
+    libusbInterface *LibUSBInterface;
     QList<Printer> Impresoras;
     QStandardItemModel printerModel;
     QItemSelectionModel *selections;

@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QStringList>
-#include <QProcess>
-#include <windows.h>
 
-#include "./escputil/escputil.h"
+#include "libusbinterface.h"
 
 
 // typedefs
@@ -39,23 +37,21 @@ class Printer
 {
 
 public:
-    Printer(const PRINTER_INFO_2 _printerInfo);
+    Printer();
     ~Printer();
 
-    PRINTER_INFO_2 printerInfo;
-    HANDLE HPrinter;
     QString Modelo;
     QString Estado;
     QString Serial;
     QString MAC;
     QString ultimos_errores;
-    TIPOS_MODO Modo;
+    TIPOS_MODO Modo = NO_ESPECIFICADO;
     NIVELES_TINTA NivelesTinta;
     int Contadores;
     bool esta_soportada;
 
     // Enviar comando a la impresora y responder
-    std::string enviar_comando(std::string comando);
+    QString enviar_comando(QString comando);
 
     // Inicializar impresora
     bool inicializar_impresora();
