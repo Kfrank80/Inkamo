@@ -15,6 +15,8 @@ public:
 
     bool init();
     bool listDevs();
+    libusb_log_cb libusb_log_all(libusb_context *ctx, enum libusb_log_level level, const char *str);
+
 
     libusb_context **ctx = NULL;
     libusb_device **devs = NULL;
