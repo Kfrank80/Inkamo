@@ -38,4 +38,8 @@ bool libusbInterface::listDevs()
     return true;
 }
 
+libusb_log_cb libusbInterface::libusb_log_all(libusb_context *ctx, enum libusb_log_level level, const char *str)
+{
+    
+}
 
