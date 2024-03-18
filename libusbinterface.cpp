@@ -19,8 +19,10 @@ libusbInterface::~libusbInterface()
 bool libusbInterface::init()
 {
     int result;
+    const struct libusb_init_option options = {{.option = LIBUSB_OPTION_LOG_LEVEL, .value = {.ival = LIBUSB_LOG_LEVEL_DEBUG}},
+                                               {.option = LIBUSB_OPTION_LOG_CB, .value = {.log_cbval = libusb_log_all}}};
 
-    result = libusb_init_context(ctx, /*options=*/NULL, /*num_options=*/0);
+    result = libusb_init_context(ctx, options, 2);
     if (result < 0)
         return false;
     return true;
