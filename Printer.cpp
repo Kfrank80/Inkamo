@@ -5,7 +5,7 @@
 
 
 // default constructor
-Printer::Printer(libusb_device_descriptor *devDesc)
+Printer::Printer(struct libusb_device_descriptor devDesc)
 {
     Desc = devDesc;
     esta_soportada = verificar_si_esta_soportada();
