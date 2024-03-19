@@ -37,10 +37,10 @@ class Printer
 {
 
 public:
-    Printer(libusb_device_descriptor *devDesc);
+    Printer(struct libusb_device_descriptor devDesc);
     ~Printer();
 
-    libusb_device_descriptor *Desc;
+    struct libusb_device_descriptor Desc;
     QString Modelo;
     QString Estado;
     QString Serial;
