@@ -11,7 +11,7 @@ UiInkamo::UiInkamo(QWidget *parent)
     ui->setupUi(this);
     LibUSBInterface = new libusbInterface();
     if(LibUSBInterface->init())
-        detectar_impresoras();
+        on_actionRefresh_Printers_triggered();
     else
     {
         QMessageBox msgBox;
@@ -110,6 +110,8 @@ bool UiInkamo::actualizar()
 // Y luego agrega cada impresora al vector Impresoras.
 bool UiInkamo::detectar_impresoras()
 {
+    Impresoras.clear();
+    
     if(LibUSBInterface->listDevs())
     {
         libusb_device *dev;
@@ -122,11 +124,15 @@ bool UiInkamo::detectar_impresoras()
             if (r < 0)
                 continue;
 
-
+            if(desc.bDeviceClass == LIBUSB_CLASS_PRINTER)
+            {
+                Printer *pPrinter = new Printer(desc);
+                Impresoras.append(*pPrinter);
+            }
         }
     }
-
-    return false;
+    
+    return (bool)Impresoras.length();
 }
 
 
