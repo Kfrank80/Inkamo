@@ -5,8 +5,9 @@
 
 
 // default constructor
-Printer::Printer()
+Printer::Printer(libusb_device_descriptor *devDesc)
 {
+    Desc = devDesc;
     esta_soportada = verificar_si_esta_soportada();
     if(esta_soportada)
     {
@@ -36,7 +37,7 @@ bool Printer::inicializar_impresora()
 // Lee los contadores de la impresora y actualiza la variable Contadores.
 bool Printer::leer_contadores()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.    
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.    
     return false;
 }
 
@@ -44,7 +45,7 @@ bool Printer::leer_contadores()
 // Resetea los contadores de almohadilla a cero y los verifica llamando a leer_contadores.
 bool Printer::resetear_contadores()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
 
     // Verificar la operacion de reseteo
     leer_contadores();
@@ -59,16 +60,16 @@ bool Printer::resetear_contadores()
 // Y actualizar variable ultimos_errores.
 bool Printer::leer_ultimos_errores()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     ultimos_errores = "";
     return false;
 }
 
 
-// EnvÌa orden de limpieza de cabezal.
+// Env√≠a orden de limpieza de cabezal.
 bool Printer::limpiar_cabezal()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     return false;
 }
 
@@ -76,14 +77,14 @@ bool Printer::limpiar_cabezal()
 // Lee la memoria EEPROM y retorna un puntero a los bytes en memoria.
 char* Printer::leer_eeprom()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     return nullptr;
 }
 
 // Escribe en la eeprom. La manera en que lo hace depende de la variable Modo
 bool Printer::restaurar_eeprom(char* nueva_eeprom)
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     return false;
 }
 
@@ -98,14 +99,14 @@ void Printer::leer_modelo()
 // Lee el estado y establece propiedad Estado
 void Printer::leer_estado()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
 }
 
 
 // Lee el serial y establece propiedad Serial.
 void Printer::leer_serial()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     Serial = "";
 }
 
@@ -113,7 +114,7 @@ void Printer::leer_serial()
 // Lee el MAC y establece propiedad MAC.
 void Printer::leer_mac()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     MAC = "";
 }
 
@@ -121,7 +122,7 @@ void Printer::leer_mac()
 // Lee el modo en que se encuentra la impresora y establece propiedad Modo.
 void Printer::leer_modo()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     Modo = NO_ESPECIFICADO;
 }
 
@@ -129,7 +130,7 @@ void Printer::leer_modo()
 // Lee los niveles de tinta de la impresora y establece propiedad Nivel de Tinta.
 bool Printer::leer_niveles_tinta()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     NivelesTinta.Black = 0;
     NivelesTinta.Cian = 0;
     NivelesTinta.Magenta = 0;
@@ -138,9 +139,9 @@ bool Printer::leer_niveles_tinta()
 }
 
 
-// Verifica si est· impresora est· soportada.
+// Verifica si est√° impresora est√° soportada.
 bool Printer::verificar_si_esta_soportada()
 {
-    // TODO: Agregar aquÌ el cÛdigo de implementaciÛn.
+    // TODO: Agregar aqu√≠ el c√≥digo de implementaci√≥n.
     return true;
 }
