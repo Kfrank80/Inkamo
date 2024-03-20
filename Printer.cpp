@@ -3,13 +3,13 @@
 
 
 
-
 // default constructor
-Printer::Printer(struct libusb_device_descriptor devDesc)
+Printer::Printer(libusb_device *_devDev, libusb_device_descriptor _devDesc)
 {
-    Desc = devDesc;
+    devDev = _devDev;
+    devDesc = _devDesc;
     esta_soportada = verificar_si_esta_soportada();
-    if(esta_soportada)
+    if(esta_soportada && libusb_open(devDev, &handle) == 0)
     {
         leer_modelo();
         leer_modo();
@@ -21,7 +21,8 @@ Printer::Printer(struct libusb_device_descriptor devDesc)
 
 Printer::~Printer()
 {
-
+    if(handle != NULL)
+        libusb_close(handle);
 }
 
 QString Printer::enviar_comando(QString comando)
@@ -92,7 +93,15 @@ bool Printer::restaurar_eeprom(char* nueva_eeprom)
 // Lee el modelo de la impresora y establece propiedad Modelo
 void Printer::leer_modelo()
 {
-    inicializar_impresora();
+    unsigned char string[100] = {0};
+
+    if(handle != NULL)
+    {
+        libusb_get_string_descriptor_ascii(handle, devDesc.iManufacturer, string, sizeof(string));
+        Modelo = QString((const char*)string);
+        libusb_get_string_descriptor_ascii(handle, devDesc.iProduct, string, sizeof(string));
+        Modelo += QString((const char*)string);
+    }
 }
 
 
@@ -100,6 +109,7 @@ void Printer::leer_modelo()
 void Printer::leer_estado()
 {
     // TODO: Agregar aquí el código de implementación.
+
 }
 
 
@@ -107,7 +117,13 @@ void Printer::leer_estado()
 void Printer::leer_serial()
 {
     // TODO: Agregar aquí el código de implementación.
-    Serial = "";
+    unsigned char string[100] = {0};
+
+    if(handle != NULL)
+    {
+        libusb_get_string_descriptor_ascii(handle, devDesc.iSerialNumber, string, sizeof(string));
+        Serial = QString((const char*)string);
+    }
 }
 
 

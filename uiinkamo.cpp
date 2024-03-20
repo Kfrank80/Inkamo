@@ -9,6 +9,16 @@ UiInkamo::UiInkamo(QWidget *parent)
     , ui(new Ui::UiInkamo)
 {
     ui->setupUi(this);
+    printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
+    selections = new QItemSelectionModel(&printerModel);
+    ui->printersTreeView->setModel(&printerModel);
+    ui->printersTreeView->setSelectionModel(selections);
+    ui->printersTreeView->setUniformRowHeights(true);
+    ui->printersTreeView->header()->setStretchLastSection(true);
+    ui->printersTreeView->viewport()->setAttribute(Qt::WA_StaticContents);
+    // Disable the focus rect to get minimal repaints when scrolling on Mac.
+    ui->printersTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+
     LibUSBInterface = new libusbInterface();
     if(LibUSBInterface->init())
         on_actionRefresh_Printers_triggered();
@@ -19,15 +29,6 @@ UiInkamo::UiInkamo(QWidget *parent)
                        "initialization of libusb.");
         msgBox.exec();
     }
-    printerModel.setHorizontalHeaderLabels(QStringList("Printers Detected"));
-    selections = new QItemSelectionModel(&printerModel);
-    ui->printersTreeView->setModel(&printerModel);
-    ui->printersTreeView->setSelectionModel(selections);
-    ui->printersTreeView->setUniformRowHeights(true);
-    ui->printersTreeView->header()->setStretchLastSection(true);
-    ui->printersTreeView->viewport()->setAttribute(Qt::WA_StaticContents);
-    // Disable the focus rect to get minimal repaints when scrolling on Mac.
-    ui->printersTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 UiInkamo::~UiInkamo()
@@ -69,8 +70,13 @@ void UiInkamo::on_actionRefresh_Printers_triggered()
         ui->printersTreeView->clearSelection();
         refrescar_vista_arbol();
         refrescar_vista_info("Some printers detected on the systems.\n"
-                             "Please see the choices availables in the Tree view.");
+                             "Please see the choices availables in the Tree view.\n"
+                             "Remember that you need to install WinUSB driver with\n"
+                             "Zadig for your printer before communicate with it.");
     }
+    else
+        refrescar_vista_info("No printers detected. Be sure if your printer is plugged in.\n"
+                             "Then try to refresh printers from the Menu.");
 }
 
 // Comprueba si hay actualizaciones. En caso de que las haya,
@@ -126,7 +132,7 @@ bool UiInkamo::detectar_impresoras()
 
             if(desc.bDeviceClass == LIBUSB_CLASS_PRINTER)
             {
-                Printer *pPrinter = new Printer(desc);
+                Printer *pPrinter = new Printer(dev, desc);
                 Impresoras.append(*pPrinter);
             }
         }
