@@ -11,11 +11,34 @@ Printer::Printer(libusb_device *_devDev, libusb_device_descriptor _devDesc)
     esta_soportada = verificar_si_esta_soportada();
     if(esta_soportada && libusb_open(devDev, &handle) == 0)
     {
-        leer_modelo();
-        leer_modo();
-        leer_estado();
-        leer_mac();
-        leer_serial();
+        if(libusb_claim_interface(handle, 0) == 0)
+        {
+            if(libusb_get_descriptor(handle,
+                                     LIBUSB_DT_ENDPOINT,
+                                     0,
+                                     (unsigned char*)&BULK_OUT,
+                                     sizeof (BULK_OUT)) == sizeof (BULK_OUT) &&
+               libusb_get_descriptor(handle,
+                                     LIBUSB_DT_ENDPOINT,
+                                     1,
+                                     (unsigned char*)&BULK_IN,
+                                     sizeof (BULK_IN)) == sizeof (BULK_IN))
+            {
+                leer_modelo();  // Leer el modelo de la impresora
+                leer_modo();
+                leer_estado();  // Leer el estado de la impresora
+                leer_mac();     // Leer la dirección MAC de la impresora (si es WIFI)
+                leer_serial();  // Leer el serial
+            }
+            else
+            {
+                libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to get BULKs descriptors");
+            }
+        }
+        else
+        {
+            libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to claim interface");
+        }
     }
 }
 
@@ -25,13 +48,32 @@ Printer::~Printer()
         libusb_close(handle);
 }
 
-QString Printer::enviar_comando(QString comando)
+bool Printer::enviar_comando(QString comando)
 {
-    return "True";
+    int transferred = 0;
+
+    if(!libusb_bulk_transfer(handle,
+                         BULK_OUT.bEndpointAddress,  // <----------- Falta obtener la dirección del BULK OUT endpoint
+                         (unsigned char*)comando.data(),
+                         sizeof(comando.data()),
+                         &transferred,
+                         3000))
+        return true;
+    else
+        return false;
 }
 
 bool Printer::inicializar_impresora()
 {    
+    if(libusb_control_transfer(handle,
+                               SOFT_RESET,
+                               2,
+                               0,
+                               0,
+                               NULL,
+                               0,
+                               3000) != 0)
+        libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to make a printer SOFT_RESET.");
     enviar_comando("ESC @");
 }
 
@@ -109,7 +151,21 @@ void Printer::leer_modelo()
 void Printer::leer_estado()
 {
     // TODO: Agregar aquí el código de implementación.
+    unsigned char data;
 
+    if(libusb_control_transfer(handle,
+                            GET_PORT_STATUS,
+                            1,
+                            0,
+                            0,
+                            &data,
+                            1,
+                            3000) == 1)
+    {
+
+    }
+    else
+        libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed obtaining printers status.");
 }
 
 

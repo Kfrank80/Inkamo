@@ -5,6 +5,12 @@
 #include "libusbinterface.h"
 
 
+#define GET_DEVICE_ID    0b10100001
+#define GET_PORT_STATUS  0b10100001
+#define SOFT_RESET       0b00100001
+
+
+
 // typedefs
 typedef enum TIPOS_MODO {
     NO_ESPECIFICADO = 0,
@@ -43,6 +49,9 @@ public:
     libusb_device_handle *handle = NULL;
     libusb_device *devDev = NULL;
     libusb_device_descriptor devDesc;
+    libusb_interface_descriptor intDesc;
+    libusb_endpoint_descriptor BULK_OUT;
+    libusb_endpoint_descriptor BULK_IN;
     QString Modelo;
     QString Estado;
     QString Serial;
@@ -54,7 +63,7 @@ public:
     bool esta_soportada;
 
     // Enviar comando a la impresora y responder
-    QString enviar_comando(QString comando);
+    bool enviar_comando(QString comando);
 
     // Inicializar impresora
     bool inicializar_impresora();

@@ -15,11 +15,11 @@ public:
 
     bool init();
     bool listDevs();
-    static void libusb_log_all(libusb_context *ctx, enum libusb_log_level level, const char *str);
+    static inline void libusb_log_all(libusb_context *ctx, enum libusb_log_level level, const char *str);
 
 
-    libusb_context **ctx = NULL;
-    libusb_device **devs = NULL;
+    libusb_context *ctx = NULL;
+    libusb_device **devs;
 
 };
 
