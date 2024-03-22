@@ -135,6 +135,41 @@ bool UiInkamo::detectar_impresoras()
                 Printer *pPrinter = new Printer(dev, desc);
                 Impresoras.append(*pPrinter);
             }
+            /*
+             *  Codigo opcional para detectar dispositivos USB
+             *  con interfaces de la clase LIBUSB_CLASS_PRINTER
+             *
+            else if(desc.bDeviceClass == LIBUSB_CLASS_PER_INTERFACE)
+            {
+                for(int iconf=0;iconf<desc.bNumConfigurations;iconf++)
+                {
+                    struct libusb_config_descriptor *config;
+                    if(libusb_get_config_descriptor(dev, iconf, &config) == 0)
+                    {
+                        for(int iinterf=0;iinterf<config->bNumInterfaces;iinterf++)
+                        {
+                            libusb_device_handle *hDev;
+                            libusb_interface_descriptor interfDesc;
+
+                            if((libusb_open(dev, &hDev) == 0) &&
+                               (libusb_get_descriptor(hDev, LIBUSB_DT_INTERFACE,
+                                                      iinterf, (unsigned char*)&interfDesc,
+                                                      sizeof (libusb_interface_descriptor)) == sizeof (libusb_interface_descriptor)))
+                            {
+                                if(interfDesc.bInterfaceClass == LIBUSB_CLASS_PRINTER)
+                                {
+                                    // Agregar aqui las interfaces de clase impresora.
+                                }
+                            }
+                            else
+                                continue;
+                        }
+                    }
+                    else
+                        continue;
+                }
+            }
+            */
         }
     }
     

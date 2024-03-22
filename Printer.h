@@ -50,8 +50,6 @@ public:
     libusb_device *devDev = NULL;
     libusb_device_descriptor devDesc;
     libusb_interface_descriptor intDesc;
-    libusb_endpoint_descriptor BULK_OUT;
-    libusb_endpoint_descriptor BULK_IN;
     QString Modelo;
     QString Estado;
     QString Serial;

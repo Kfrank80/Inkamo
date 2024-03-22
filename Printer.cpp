@@ -8,31 +8,53 @@ Printer::Printer(libusb_device *_devDev, libusb_device_descriptor _devDesc)
 {
     devDev = _devDev;
     devDesc = _devDesc;
-    esta_soportada = verificar_si_esta_soportada();
-    if(esta_soportada && libusb_open(devDev, &handle) == 0)
+
+    /*
+     * A printer has one default configuration descriptor.
+     * This descriptor has one interface, called the Data interface,
+     * which has one or two endpoints: Bulk OUT, and the optional Bulk IN.
+     */
+
+    if(libusb_open(devDev, &handle) == 0)
     {
         if(libusb_claim_interface(handle, 0) == 0)
         {
             if(libusb_get_descriptor(handle,
-                                     LIBUSB_DT_ENDPOINT,
+                                     LIBUSB_DT_INTERFACE,
                                      0,
-                                     (unsigned char*)&BULK_OUT,
-                                     sizeof (BULK_OUT)) == sizeof (BULK_OUT) &&
-               libusb_get_descriptor(handle,
-                                     LIBUSB_DT_ENDPOINT,
-                                     1,
-                                     (unsigned char*)&BULK_IN,
-                                     sizeof (BULK_IN)) == sizeof (BULK_IN))
+                                     (unsigned char*)&intDesc,
+                                     sizeof (intDesc)) == sizeof (intDesc))
             {
-                leer_modelo();  // Leer el modelo de la impresora
-                leer_modo();
-                leer_estado();  // Leer el estado de la impresora
-                leer_mac();     // Leer la dirección MAC de la impresora (si es WIFI)
-                leer_serial();  // Leer el serial
+                esta_soportada = verificar_si_esta_soportada();
+                if(esta_soportada && inicializar_impresora())
+                {
+                    /* Hasta aqui la impresora cumple todas las condiciones:
+                     * 1.- Pertenece a la clase LIBUSB_CLASS_PRINTER
+                     * 2.- Tiene un descriptor de dispositivo obtenido exitosamente.
+                     * 3.- Tiene un descriptor de configuracion por defecto.
+                     * 4.- Tiene un descriptor de interface obtenido exitosamente.
+                     * 5.- Tengo un handle al dispositivo obtenido exitosamente con la llamada a libusb_open
+                     * 6.- La interface cumple con los requisitos de clase y subclase para impresoras.
+                     * 7.- La interface es bidireccional usando el protocolo IEEE 1284.4
+                     * 8.- Tiene 2 endpoints: indice 0 -> BULK OUT, indice 1 -> BULK IN
+                     * 9.- Respondio exitosamente al comando de inicializacion "ESC @"
+                     * La impresora por tanto esta inicializada y lista para comunicarse con mi software!!
+                    */
+                    leer_modelo();  // Leer el modelo de la impresora
+                    leer_modo();
+                    leer_estado();  // Leer el estado de la impresora
+                    leer_mac();     // Leer la dirección MAC de la impresora (si es WIFI)
+                    leer_serial();  // Leer el serial
+                }
+                else
+                {
+                    // La impresora no esta soportada por ahora.
+                    libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Printer not supported");
+                }
             }
             else
             {
-                libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to get BULKs descriptors");
+                libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to get the interface descriptor");
             }
         }
         else
@@ -45,7 +67,10 @@ Printer::Printer(libusb_device *_devDev, libusb_device_descriptor _devDesc)
 Printer::~Printer()
 {
     if(handle != NULL)
+    {
+        libusb_release_interface(handle, 0);
         libusb_close(handle);
+    }
 }
 
 bool Printer::enviar_comando(QString comando)
@@ -53,7 +78,7 @@ bool Printer::enviar_comando(QString comando)
     int transferred = 0;
 
     if(!libusb_bulk_transfer(handle,
-                         BULK_OUT.bEndpointAddress,  // <----------- Falta obtener la dirección del BULK OUT endpoint
+                         intDesc.endpoint[0].bEndpointAddress,
                          (unsigned char*)comando.data(),
                          sizeof(comando.data()),
                          &transferred,
@@ -74,7 +99,10 @@ bool Printer::inicializar_impresora()
                                0,
                                3000) != 0)
         libusbInterface::libusb_log_all(NULL, LIBUSB_LOG_LEVEL_DEBUG, "Failed to make a printer SOFT_RESET.");
-    enviar_comando("ESC @");
+    if(enviar_comando("ESC @"))
+        return true;
+    else
+        return false;
 }
 
 // Lee los contadores de la impresora y actualiza la variable Contadores.
@@ -214,6 +242,15 @@ bool Printer::leer_niveles_tinta()
 // Verifica si está impresora está soportada.
 bool Printer::verificar_si_esta_soportada()
 {
-    // TODO: Agregar aquí el código de implementación.
-    return true;
+    // TODO: Es necesario añadir codigo para distinguir entre las marcas/modelos soportados.
+    if(handle != NULL &&                                  // libusb_open OK
+       devDev != NULL &&                                  // libusb_get_device_list OK
+       devDesc.bDeviceClass == LIBUSB_CLASS_PRINTER &&    // libusb_get_device_descriptor OK
+       devDesc.bNumConfigurations == 1 &&                 // libusb_claim_interface OK too
+       intDesc.bInterfaceClass == LIBUSB_CLASS_PRINTER && // libusb_get_descriptor to obtain libusb_interface_descriptor OK
+       intDesc.bInterfaceSubClass == 1 &&                 // Interface subclass for printers
+       intDesc.bInterfaceProtocol == 3 &&                 // IEEE 1284.4 compatible bi-directional interface.
+       intDesc.bNumEndpoints == 2)                        // Most have 2 endpoints: BULK OUT and BULK IN
+        return true;
+    return false;
 }
